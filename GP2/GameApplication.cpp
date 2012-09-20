@@ -12,10 +12,13 @@ CGameApplication::~CGameApplication(void)
 {
 	if(m_pD3D10Device)
 		m_pD3D10Device->ClearState();
+
 	if(m_pRenderTargetView)
 		m_pRenderTargetView->Release();
+
 	if(m_pSwapChain)
 		m_pSwapChain->Release();
+
 	if(m_pD3D10Device)
 		m_pD3D10Device->Release();
 
@@ -24,7 +27,6 @@ CGameApplication::~CGameApplication(void)
 		delete m_pWindow;
 		m_pWindow=NULL;
 	}
-
 }
 
 bool CGameApplication::init()
