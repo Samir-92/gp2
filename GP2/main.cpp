@@ -1,18 +1,24 @@
+//Are we on the windows platform?
+#ifdef WIN32
+//if so include the header for windows applications
 #include <Windows.h>
 #include "GameApplication.h"
+#endif
 
+//Check to see if we are on windows
 #ifdef WIN32
-int WINAPI WinMain(HINSTANCE hInstance,
+int WINAPI WinMain(HINSTANCE hInstance, 
 					HINSTANCE hPrevInstance, 
-					LPSTR lpCmdLine, 
+					LPSTR lpCmdLine,
 					int nCmdShow)
 #else
-int main(argc,char **argv)
+//we are on some other platform
+int main(int argc, char **argv)
 #endif
 {
-	CGameApplication*pApp = new CGameApplication();
+	CGameApplication *pApp=new CGameApplication();
 
-	if(!pApp->init())
+	if(!pApp -> init())
 	{
 		if(pApp)
 		{
@@ -21,7 +27,6 @@ int main(argc,char **argv)
 			return 1;
 		}
 	}
-
 	pApp->run();
 
 	if(pApp)
@@ -29,7 +34,5 @@ int main(argc,char **argv)
 		delete pApp;
 		pApp=NULL;
 	}
-
 	return 0;
 }
-

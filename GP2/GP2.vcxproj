@@ -55,7 +55,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>D3D10.LIB;D3DX10.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d10.lib;d3dx10.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -84,6 +84,9 @@
   <ItemGroup>
     <ClInclude Include="GameApplication.h" />
     <ClInclude Include="Win32Window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ScreenSpace.fx" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
