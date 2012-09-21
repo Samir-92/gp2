@@ -1,11 +1,6 @@
-//Are we on the windows platform?
-#ifdef WIN32
-//if so include the header for windows applications
 #include <Windows.h>
 #include "GameApplication.h"
-#endif
 
-//Check to see if we are on windows
 #ifdef WIN32
 int WINAPI WinMain(HINSTANCE hInstance, 
 					HINSTANCE hPrevInstance, 

@@ -53,8 +53,9 @@ bool CGameApplication::init()
 		return false;
 
 	if(!initGame())
+	{
 		return false;
-
+	}
 	return true;
 }
 
@@ -71,7 +72,9 @@ bool CGameApplication::initGame()
 							TEXT("ERROR"),MB_OK);
 		return false;
 	}
+
 	m_pTechnique=m_pEffect->GetTechniqueByName("Render");
+
 	D3D10_BUFFER_DESC bd;
 	bd.Usage = D3D10_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(Vertex)*3;
@@ -79,12 +82,13 @@ bool CGameApplication::initGame()
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
-	Vertex vertices[] = 
+	Vertex vertices[]= 
 	{
 		D3DXVECTOR3(0.0f,0.5f,0.5f),
 		D3DXVECTOR3(0.5f,-0.5f,0.5f),
 		D3DXVECTOR3(-0.5f,-0.5f,0.5f),
 	};
+
 	D3D10_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = vertices;
 
@@ -109,6 +113,7 @@ bool CGameApplication::initGame()
 	UINT offset = 0;
 	m_pD3D10Device->IAGetVertexBuffers(0,1,&m_pVertexBuffer,&stride,&offset);
 	m_pD3D10Device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	
 	return true;
 }
 
