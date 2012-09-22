@@ -60,23 +60,6 @@ bool CGameApplication::init()
 
 bool CGameApplication::initGame()
 {
-	D3D10_BUFFER_DESC bd;
-	bd.Usage = D3D10_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(Vertex)*3;
-	bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
-	bd.MiscFlags = 0;
-
-	Vertex vertices[]= 
-	{
-		D3DXVECTOR3(0.0f,0.5f,0.5f),
-		D3DXVECTOR3(0.5f,-0.5f,0.5f),
-		D3DXVECTOR3(-0.5f,-0.5f,0.5f),
-	};
-
-	D3D10_SUBRESOURCE_DATA InitData;
-	InitData.pSysMem = vertices;
-
 	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined(DEBUG) || defined(_DEBUG)
 	dwShaderFlags |= D3D10_SHADER_DEBUG;
@@ -88,11 +71,8 @@ bool CGameApplication::initGame()
 							TEXT("ERROR"),MB_OK);
 		return false;
 	}
-
+	
 	m_pTechnique=m_pEffect->GetTechniqueByName("Render");
-
-	if(FAILED(m_pD3D10Device->CreateBuffer(&bd, &InitData, &m_pVertexBuffer)))
-		return false;
 
 	D3D10_INPUT_ELEMENT_DESC layout[] =
 	{
@@ -111,9 +91,29 @@ bool CGameApplication::initGame()
 	}
 
 	m_pD3D10Device->IASetInputLayout(m_pVertexLayout);
+	
+	D3D10_BUFFER_DESC bd;
+	bd.Usage = D3D10_USAGE_DEFAULT;
+	bd.ByteWidth = sizeof(Vertex)*3;
+	bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
+	bd.CPUAccessFlags = 0;
+	bd.MiscFlags = 0;
+
+	Vertex vertices[]= 
+	{
+		D3DXVECTOR3(0.0f,0.5f,0.5f),
+		D3DXVECTOR3(0.5f,-0.5f,0.5f),
+		D3DXVECTOR3(-0.5f,-0.5f,0.5f),
+	};
+	D3D10_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = vertices;
+
+	if(FAILED(m_pD3D10Device->CreateBuffer(&bd, &InitData, &m_pVertexBuffer)))
+		return false;
+
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
-	m_pD3D10Device->IAGetVertexBuffers(0,1,&m_pVertexBuffer,&stride,&offset);
+	m_pD3D10Device->IASetVertexBuffers(0,1,&m_pVertexBuffer,&stride,&offset);
 
 	m_pD3D10Device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
@@ -139,7 +139,7 @@ void CGameApplication::render()
 
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_pTechnique->GetDesc(&techDesc);
-	for(UINT p=0; p < techDesc.Passes; ++p)
+	for(UINT p =0; p < techDesc.Passes; ++p)
 	{
 		m_pTechnique->GetPassByIndex(p)->Apply(0);
 		m_pD3D10Device->Draw(3,0);
