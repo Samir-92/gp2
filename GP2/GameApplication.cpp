@@ -1,6 +1,6 @@
 #include "GameApplication.h"
 
-struct Vertex
+struct Vertex 
 {
 	D3DXVECTOR3 Pos;
 };
@@ -53,28 +53,13 @@ bool CGameApplication::init()
 		return false;
 
 	if(!initGame())
-	{
 		return false;
-	}
+
 	return true;
 }
 
 bool CGameApplication::initGame()
 {
-	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
-#if defined(DEBUG) || defined(_DEBUG)
-	dwShaderFlags |= D3D10_SHADER_DEBUG;
-#endif
-	if(FAILED(D3DX10CreateEffectFromFile(TEXT("ScreenSpace.fx"), NULL,NULL, "fx_4_0",
-										dwShaderFlags,0,m_pD3D10Device,NULL,NULL, &m_pEffect, NULL,NULL)))
-	{
-		MessageBox(NULL,TEXT("The FX file cannot be located. Please run the executable from the directory that contains the FX file."),
-							TEXT("ERROR"),MB_OK);
-		return false;
-	}
-
-	m_pTechnique=m_pEffect->GetTechniqueByName("Render");
-
 	D3D10_BUFFER_DESC bd;
 	bd.Usage = D3D10_USAGE_DEFAULT;
 	bd.ByteWidth = sizeof(Vertex)*3;
@@ -92,6 +77,20 @@ bool CGameApplication::initGame()
 	D3D10_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = vertices;
 
+	DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
+#if defined(DEBUG) || defined(_DEBUG)
+	dwShaderFlags |= D3D10_SHADER_DEBUG;
+#endif
+	if(FAILED(D3DX10CreateEffectFromFile(TEXT("ScreenSpace.fx"), NULL,NULL, "fx_4_0",
+										dwShaderFlags,0,m_pD3D10Device,NULL,NULL, &m_pEffect, NULL,NULL)))
+	{
+		MessageBox(NULL,TEXT("The FX file cannot be located. Please run the executable from the directory that contains the FX file."),
+							TEXT("ERROR"),MB_OK);
+		return false;
+	}
+
+	m_pTechnique=m_pEffect->GetTechniqueByName("Render");
+
 	if(FAILED(m_pD3D10Device->CreateBuffer(&bd, &InitData, &m_pVertexBuffer)))
 		return false;
 
@@ -104,14 +103,18 @@ bool CGameApplication::initGame()
 	D3D10_PASS_DESC PassDesc;
 	m_pTechnique->GetPassByIndex(0)->GetDesc(&PassDesc);
 
-	if(FAILED(m_pD3D10Device->CreateInputLayout(layout,numElements,PassDesc.pIAInputSignature,PassDesc.IAInputSignatureSize,&m_pVertexLayout)))
+	if(FAILED(m_pD3D10Device->CreateInputLayout(layout,numElements,
+			PassDesc.pIAInputSignature,PassDesc.IAInputSignatureSize,
+			&m_pVertexLayout)))
 	{
 		return false;
 	}
+
 	m_pD3D10Device->IASetInputLayout(m_pVertexLayout);
 	UINT stride = sizeof(Vertex);
 	UINT offset = 0;
 	m_pD3D10Device->IAGetVertexBuffers(0,1,&m_pVertexBuffer,&stride,&offset);
+
 	m_pD3D10Device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	return true;
@@ -121,7 +124,7 @@ void CGameApplication::run()
 {
 	while(m_pWindow->running())
 	{
-		if(! m_pWindow->checkForWindowMessages())
+		if(!m_pWindow->checkForWindowMessages())
 		{
 			update();
 			render();
@@ -136,7 +139,7 @@ void CGameApplication::render()
 
 	D3D10_TECHNIQUE_DESC techDesc;
 	m_pTechnique->GetDesc(&techDesc);
-	for(UINT p =0; p < techDesc.Passes; ++p)
+	for(UINT p=0; p < techDesc.Passes; ++p)
 	{
 		m_pTechnique->GetPassByIndex(p)->Apply(0);
 		m_pD3D10Device->Draw(3,0);
@@ -172,7 +175,7 @@ bool CGameApplication::initGraphics()
 
 	sd.OutputWindow = m_pWindow->getHandleToWindow();
 	sd.Windowed = (BOOL)(!m_pWindow->isFullScreen());
-	sd.BufferCount = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 
 	sd.SampleDesc.Count = 1;
 	sd.SampleDesc.Quality = 0;
@@ -198,7 +201,7 @@ bool CGameApplication::initGraphics()
 	}
 	pBackBuffer->Release();
 
-	m_pD3D10Device->OMSetRenderTargets(1,&m_pRenderTargetView,NULL);
+	m_pD3D10Device->OMSetRenderTargets(1, &m_pRenderTargetView, NULL);
 
 	D3D10_VIEWPORT vp;
 	vp.Width=width;
@@ -209,13 +212,13 @@ bool CGameApplication::initGraphics()
 	vp.TopLeftY=0;
 	m_pD3D10Device->RSSetViewports(1, &vp);
 
-		return true;
+	return true;
 }
 
 bool CGameApplication::initWindow()
 {
 	m_pWindow=new CWin32Window();
-	if(!m_pWindow->init(TEXT("Lab 1 Create Device"),800,640,false))
+	if(!m_pWindow->init(TEXT("Lab 1 - Create Device"),800,640,false))
 		return false;
 
 	return true;
