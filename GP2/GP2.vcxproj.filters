@@ -46,6 +46,8 @@
     <None Include="ScreenSpace.fx">
       <Filter>Effects</Filter>
     </None>
-    <None Include="FirstEffect\FirstEffect.fxcproj" />
+    <None Include="Transform.fx">
+      <Filter>Effects</Filter>
+    </None>
   </ItemGroup>
 </Project>

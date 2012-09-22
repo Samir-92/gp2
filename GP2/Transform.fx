@@ -1,8 +1,8 @@
-float4*4 matWorld:WORLD;
-floar4*4 matView:VIEW;
-float4*4 matProjection:PROJECTION;
+float4x4 matWorld:WORLD;
+float4x4 matView:VIEW;
+float4x4 matProjection:PROJECTION;
 
-struct VS_IPNUT
+struct VS_INPUT
 {
 	float4 pos:POSITION;
 };
@@ -16,14 +16,14 @@ PS_INPUT VS(VS_INPUT input)
 {
 	PS_INPUT output=(PS_INPUT)0;
 	
-	float4*4 matViewProjection=mul(matView,matProjection);
-	float4*4 matWorldViewProjection=mul(matWorlld,matViewProjection);
+	float4x4 matViewProjection=mul(matView,matProjection);
+	float4x4 matWorldViewProjection=mul(matWorld,matViewProjection);
 	
 	output.pos=mul(input.pos,matWorldViewProjection);
 	return output;
 }
 
-float4 PS(PS_INPUT input);SV_TARGET
+float4 PS(PS_INPUT input):SV_TARGET
 {
 	return float4(1.0f,1.0f,1.0f);
 }
