@@ -125,7 +125,7 @@ bool CGameApplication::initGame()
 
 	m_pD3D10Device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
-	D3DXVECTOR3 cameraPos(0.0f,0.0f,-10.0f);
+	D3DXVECTOR3 cameraPos(0.0f,1.0f,-5.0f);
 	D3DXVECTOR3 cameraLook(0.0f,0.0f,1.0f);
 	D3DXVECTOR3 cameraUp(0.0f,1.0f,0.0f);
 	D3DXMatrixLookAtLH(&m_matView, &cameraPos, &cameraLook, &cameraUp);
