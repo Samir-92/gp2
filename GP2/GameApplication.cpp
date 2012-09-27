@@ -106,16 +106,21 @@ bool CGameApplication::initGame()
 	
 	D3D10_BUFFER_DESC bd;
 	bd.Usage = D3D10_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(Vertex)*3;
+	bd.ByteWidth = sizeof(Vertex)*8;
 	bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
 	bd.CPUAccessFlags = 0;
 	bd.MiscFlags = 0;
 
 	Vertex vertices[]= 
 	{
+		D3DXVECTOR3(0.0f,0.0f,0.5f),
+		D3DXVECTOR3(0.5f,0.0f,0.5f),
+		D3DXVECTOR3(0.5f,0.5f,0.5f),
 		D3DXVECTOR3(0.0f,0.5f,0.5f),
-		D3DXVECTOR3(0.5f,-0.5f,0.5f),
-		D3DXVECTOR3(-0.5f,-0.5f,0.5f),
+		D3DXVECTOR3(0.5f,0.0f,1.0f),
+		D3DXVECTOR3(1.0f,0.0f,1.0f),
+		D3DXVECTOR3(1.0f,0.5f,1.0f),
+		D3DXVECTOR3(0.5f,0.5f,1.0f),
 	};
 	D3D10_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = vertices;
@@ -129,12 +134,12 @@ bool CGameApplication::initGame()
 
 	D3D10_BUFFER_DESC ibd;
 	ibd.Usage = D3D10_USAGE_DEFAULT;
-	ibd.ByteWidth = sizeof(int)*3;
+	ibd.ByteWidth = sizeof(int)*36;
 	ibd.BindFlags = D3D10_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 
-	int indices[] = {0,1,2};
+	int indices[] = {0,1,2,0,2,3,4,5,6,4,6,7,3,2,7,2,7,6,6,2,1,1,6,5,7,4,0,0,3,7,0,1,4,1,4,5};
 
 	D3D10_SUBRESOURCE_DATA IBInitData;
 	IBInitData.pSysMem = indices;
@@ -199,13 +204,14 @@ void CGameApplication::render()
 	for(UINT p =0; p < techDesc.Passes; ++p)
 	{
 		m_pTechnique->GetPassByIndex(p)->Apply(0);
-		m_pD3D10Device->DrawIndexed(3,0,0);
+		m_pD3D10Device->DrawIndexed(36,0,0);
 	}
 	m_pSwapChain->Present(0,0);
 }
 
 void CGameApplication::update()
 {
+	m_vecRotation.y += 0.0005f;
 	D3DXMatrixScaling(&m_matScale,m_vecScale.x,m_vecScale.y,m_vecScale.z);
 
 	D3DXMatrixRotationYawPitchRoll(&m_matRotation, m_vecRotation.y,m_vecRotation.x,m_vecRotation.z);
