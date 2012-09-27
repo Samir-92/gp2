@@ -24,6 +24,10 @@ CGameApplication::~CGameApplication(void)
 	if(m_pVertexBuffer)
 		m_pVertexBuffer->Release();
 
+
+	if(m_pIndexBuffer)
+		m_pIndexBuffer->Release();
+
 	if(m_pVertexLayout)
 		m_pVertexLayout->Release();
 	
@@ -123,6 +127,22 @@ bool CGameApplication::initGame()
 	UINT offset = 0;
 	m_pD3D10Device->IASetVertexBuffers(0,1,&m_pVertexBuffer,&stride,&offset);
 
+	D3D10_BUFFER_DESC ibd;
+	ibd.Usage = D3D10_USAGE_DEFAULT;
+	ibd.ByteWidth = sizeof(int)*3;
+	ibd.BindFlags = D3D10_BIND_INDEX_BUFFER;
+	ibd.CPUAccessFlags = 0;
+	ibd.MiscFlags = 0;
+
+	int indices[] = {0,1,2};
+
+	D3D10_SUBRESOURCE_DATA IBInitData;
+	IBInitData.pSysMem = indices;
+	if(FAILED(m_pD3D10Device->CreateBuffer(&ibd, &IBInitData, &m_pIndexBuffer)))
+		return false;
+
+	m_pD3D10Device->IASetIndexBuffer(m_pIndexBuffer,DXGI_FORMAT_R32_UINT,0);
+
 	m_pD3D10Device->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	
 	D3DXVECTOR3 cameraPos(0.0f,1.0f,-5.0f);
@@ -179,7 +199,7 @@ void CGameApplication::render()
 	for(UINT p =0; p < techDesc.Passes; ++p)
 	{
 		m_pTechnique->GetPassByIndex(p)->Apply(0);
-		m_pD3D10Device->Draw(3,0);
+		m_pD3D10Device->DrawIndexed(3,0,0);
 	}
 	m_pSwapChain->Present(0,0);
 }
